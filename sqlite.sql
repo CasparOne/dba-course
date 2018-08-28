@@ -1,26 +1,23 @@
-DROP DATABASE dba;
-CREATE DATABASE dba;
-
 
 /* books table creation */
-CREATE TABLE books
+CREATE TABLE main.books
 (
-    `id` SERIAL,
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT DEFAULT ROWID,
     `title` VARCHAR(120),
     `author` VARCHAR(200),
-    `released` INT,
-    `price` FLOAT UNSIGNED,
-    `rating` INT
+    `released` INTEGER,
+    `price` FLOAT,
+    `rating` INTEGER
 );
+
 
 /* publishers table creation */
-CREATE TABLE publishers
+CREATE TABLE main.publishers
 (
-    `id` SERIAL PRIMARY KEY,
-    `publishing` VARCHAR(240),
-    `city` VARCHAR(120)
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT DEFAULT ROWID,
+  `publishing` VARCHAR(240),
+  `city` VARCHAR(120)
 );
-
 
 /* books inserts*/
 INSERT INTO books (`title`, `author`, `released`, `price`, `rating`) VALUES ('Черепаха на луне', 'Иван Сидорчук', '1990', '981.22' , '0.0' );
@@ -39,10 +36,11 @@ INSERT INTO books (`title`, `author`, `released`, `price`, `rating`) VALUES ('Л
 INSERT INTO books (`title`, `author`, `released`, `price`, `rating`) VALUES ('грязь провинциального городка', 'Сергей шнуров', '2017', '315.50' , '2.2' );
 
 
+
 /* publishers inserts*/
-INSERT INTO publishers (`publishing`, `city`) VALUES ('Экран', 'Москва');
-INSERT INTO publishers (`publishing`, `city`) VALUES ('Имплементейшн', 'Нью Йорк');
-INSERT INTO publishers (`publishing`, `city`) VALUES ('Юный коммунист', 'Ленинград');
-INSERT INTO publishers (`publishing`, `city`) VALUES ('Заря', 'Томск');
-INSERT INTO publishers (`publishing`, `city`) VALUES ('Эппл Продакшн', 'Лос Анжелес');
-INSERT INTO publishers (`publishing`, `city`) VALUES ('Нью Фаг Ентерпрайзис', 'Бостон');
+INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Экран', 'Москва');
+INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Имплементейшн', 'Нью Йорк');
+INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Юный коммунист', 'Ленинград');
+INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Заря', 'Томск');
+INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Эппл Продакшн', 'Лос Анжелес');
+INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Нью Фаг Ентерпрайзис', 'Бостон');
