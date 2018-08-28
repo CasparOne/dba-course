@@ -48,3 +48,38 @@ INSERT INTO publishers (`publishing`, `city`) VALUES ('Юный коммунис
 INSERT INTO publishers (`publishing`, `city`) VALUES ('Заря', 'Томск');
 INSERT INTO publishers (`publishing`, `city`) VALUES ('Эппл Продакшн', 'Лос Анжелес');
 INSERT INTO publishers (`publishing`, `city`) VALUES ('Нью Фаг Ентерпрайзис', 'Бостон');
+
+
+-- Все книги определенного автора / авторов
+SELECT *
+FROM dba.books
+WHERE `author` = 'Геннадий Филипченко' OR `author` = 'Стивен Кинг' -- can add any authors with OR operator
+ORDER BY `author`, `id` DESC;
+
+
+-- Заглавия книг (и год издания) определенного автора, отсортированные по году их издания
+SELECT concat(`title` , ' (', `released`, ' г.)') as title
+FROM dba.books
+WHERE `author` = 'Геннадий Филипченко' OR `author` = 'Стивен Кинг'
+ORDER BY `released`;
+
+
+-- Все книги ценой не более 500 рублей
+SELECT `id`,
+      concat('"', `title`, '"') as `title`,
+      `author`,
+      `released`,
+      `price`,
+      `publisher`
+FROM dba.books
+WHERE `price` <= '500'
+ORDER BY `price`;
+
+
+-- Имена авторов книг, вышедших в 1990-е годы
+SELECT `author`
+FROM dba.books
+WHERE `released` BETWEEN '1990' AND '1999'
+ORDER BY `released`;
+
+

@@ -23,8 +23,6 @@ CREATE TABLE public.publishers
     "city" VARCHAR(120)
 );
 
-
-/* books inserts*/
 /* books inserts*/
 INSERT INTO books ("title", "author", "released", "price", "rating", "publisher") VALUES ('Черепаха на луне', 'Иван Сидорчук', '1990', '981.22' , '0.0', '1');
 INSERT INTO books ("title", "author", "released", "price", "rating", "publisher") VALUES ('Иван васильевич меняет проффесию', 'Дмитрий Окунев', '1972', '322.22' , '8.5', '2' );
@@ -50,3 +48,42 @@ INSERT INTO public.publishers ("publishing", "city") VALUES ('Юный комм�
 INSERT INTO public.publishers ("publishing", "city") VALUES ('Заря', 'Томск');
 INSERT INTO public.publishers ("publishing", "city") VALUES ('Эппл Продакшн', 'Лос Анжелес');
 INSERT INTO public.publishers ("publishing", "city") VALUES ('Нью Фаг Ентерпрайзис', 'Бостон');
+
+
+-- Все книги определенного автора / авторов
+SELECT
+       "id", '"' || "title" || '"' as "title",
+       "author",
+       "released",
+       "price",
+       "rating",
+       "publisher"
+FROM public.books
+WHERE "author" = 'Геннадий Филипченко' OR "author" = 'Стивен Кинг' -- can add any authors with OR operator
+ORDER BY "author", "id" DESC;
+
+
+-- Все книги ценой не более 500 рублей
+SELECT
+       "id", '"' || "title" || '"' as "title",
+       "author",
+       "released",
+       "price",
+       "rating",
+       "publisher"
+FROM public.books
+WHERE "price" <= '500'
+ORDER BY "price";
+
+
+-- Заглавия книг (и год издания) определенного автора, отсортированные по году их издания
+SELECT "title" || ' (' || "released" || 'г.)' as "title"
+FROM public.books
+ORDER BY "released";
+
+
+-- Имена авторов книг, вышедших в 1990-е годы
+SELECT "author"
+FROM public.books
+WHERE "released" BETWEEN '1990' AND '1999'
+ORDER BY "released";

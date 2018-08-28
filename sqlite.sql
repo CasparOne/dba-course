@@ -46,3 +46,43 @@ INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Юный комму�
 INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Заря', 'Томск');
 INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Эппл Продакшн', 'Лос Анжелес');
 INSERT INTO main.publishers (`publishing`, `city`) VALUES ('Нью Фаг Ентерпрайзис', 'Бостон');
+
+
+
+-- Все книги определенного автора / авторов
+SELECT
+       `id`, '"' || `title` || '"' as `title`,
+       `author`,
+       `released`,
+       `price`,
+       `rating`,
+       `publisher`
+FROM main.books
+WHERE `author` = 'Геннадий Филипченко' OR `author` = 'Стивен Кинг' -- can add any authors with OR operator
+ORDER BY `author`, `id` DESC;
+
+
+-- Все книги ценой не более 500 рублей
+SELECT
+       `id`, '"' || `title` || '"' as `title`,
+       `author`,
+       `released`,
+       `price`,
+       `rating`,
+       `publisher`
+FROM main.books
+WHERE `price` <= '500'
+ORDER BY `price`;
+
+-- Заглавия книг (и год издания) определенного автора, отсортированные по году их издания
+SELECT `title` || ' (' || `released` || 'г.)' as `title`
+FROM main.books
+ORDER BY `released`;
+
+
+-- Имена авторов книг, вышедших в 1990-е годы
+SELECT `author`
+FROM main.books
+WHERE `released` BETWEEN '1990' AND '1999'
+ORDER BY `released`;
+
