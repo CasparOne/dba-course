@@ -2,17 +2,17 @@
 /* items table creation */
 CREATE TABLE items
 (
-    `id` SERIAL PRIMARY KEY,
-    `sku` VARCHAR (90),
-    `barcode` CHAR(12) DEFAULT '000000000000' NOT NULL,
-    `title` VARCHAR(120),
-    `full_title` VARCHAR (360),
-    `description` TEXT,
-    `img_uri` TEXT,
-    `price` DECIMAL (8,2),
-    `wh_count` BIGINT,
-    `income_date` DATE,
-    `updated` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+    `id` SERIAL PRIMARY KEY, -- id PK
+    `sku` VARCHAR (90), -- артикул товара
+    `barcode` CHAR(12) DEFAULT '000000000000' NOT NULL, -- штрихкод товара формата EAN-13
+    `title` VARCHAR(120), -- кратое название
+    `full_title` VARCHAR (360), -- полное наименование
+    `description` TEXT, -- описание
+    `img_uri` TEXT, -- имя файла картинки товара
+    `price` DECIMAL (8,2), -- цена товара
+    `wh_count` BIGINT UNSIGNED, -- количество товара на складе
+    `income_date` DATE, -- дата поступления
+    `updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- отметка об изменении записи (в проследующем повесится тригер, который будет изменять это поле после каждого апдейта)
 
 );
 
@@ -43,3 +43,28 @@ INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_
 INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_uri`, `price`, `wh_count`, `income_date`) VALUES ('42569NGQ', '615705571001', 'AT&T 57006', 'Random description: gid2WHuhhP6dz67EjSgMyux1l', 'Smartphone AT&T 57006', 'at&t_5700.jpg', '78903.92', '10', '2014-4-26');
 INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_uri`, `price`, `wh_count`, `income_date`) VALUES ('60335TLS', '657263817196', 'AT&T 57006', 'Random description: tBAOQPiObZPIkEyRbBcKWLn8B', 'Smartphone AT&T 57006', 'at&t_5700.jpg', '53713.98', '16', '2012-8-8');
 INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_uri`, `price`, `wh_count`, `income_date`) VALUES ('26846HVC', '580461169324', 'Axia A1082', 'Random description: Z WYREr4wmUkfp1R6d64KgKSa', 'Smartphone Axia A1084', 'axia_a108.jpg', '41236.27', '10', '2011-2-1');
+
+
+
+
+
+/** тестовые запросы. Могут не работать!!! **/
+
+-- Попытка проапдейтить запись с id = 1 где значение поля `barcode` (поле для хранения штрихкода в 12-символьном формате EAN-13
+UPDATE items SET `barcode` = '00000000000000' WHERE `id` = '1';
+--[2018-09-04 14:05:34] [22001][1406] Data truncation: Data too long for column 'barcode' at row 1
+
+
+-- попытка проапдейтить поля price значением не соответствующим параметром в DDL секции таблицы.
+UPDATE items SET `price` = '999999.003' WHERE `id` BETWEEN '1' AND '5';
+--[HY000][1366] Incorrect decimal value: '999999,003' for column 'price' at row 1
+
+-- попытка проапдейтить запись и изменить поле некорректными зхначениями DATA
+UPDATE items SET `income_date` = '2022-15-63' WHERE `id` NOT IN ('1', '3', '6', '22');
+-- [2018-09-04 14:15:08] [22001][1292] Data truncation: Incorrect date value: '2022-15-63' for column 'income_date' at row 2
+
+-- Попытка проапдейтить запись и установить значение поля updated отрицательным. Формат TIMESTAMP не может быть отрицательным
+-- так же, сам формат не верный. Формат должен быть 'yyyy-mm-dd hh:mm:ss'
+UPDATE items SET `updated` = '23344422' WHERE `id`=12;
+
+

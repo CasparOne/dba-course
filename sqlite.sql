@@ -40,3 +40,28 @@ INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_
 INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_uri`, `price`, `wh_count`, `income_date`) VALUES ('42569NGQ', '615705571001', 'AT&T 57006', 'Random description: gid2WHuhhP6dz67EjSgMyux1l', 'Smartphone AT&T 57006', 'at&t_5700.jpg', '78903.92', '10', '2014-4-26');
 INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_uri`, `price`, `wh_count`, `income_date`) VALUES ('60335TLS', '657263817196', 'AT&T 57006', 'Random description: tBAOQPiObZPIkEyRbBcKWLn8B', 'Smartphone AT&T 57006', 'at&t_5700.jpg', '53713.98', '16', '2012-8-8');
 INSERT INTO items (`sku`, `barcode`, `title`, `full_title`, `description`, `img_uri`, `price`, `wh_count`, `income_date`) VALUES ('26846HVC', '580461169324', 'Axia A1082', 'Random description: Z WYREr4wmUkfp1R6d64KgKSa', 'Smartphone Axia A1084', 'axia_a108.jpg', '41236.27', '10', '2011-2-1');
+
+
+
+
+
+/** тестовые запросы. Могут не работать!!! **/
+
+-- Попытка проапдейтить запись с id = 1 где значение поля `barcode` (поле для хранения
+UPDATE items SET `barcode` = '00000000000000' WHERE `id` = '1';
+-- Успешно. Ограничение в 12 символов не сработало. Связанно с тем что в SQLite Всего 1 тип TEXT, который запишет все что мы ему передадим.
+--  Однако, необходимо все равно при создании таблицы писать по-возможности на SQL для обеспечения совместимости с другими СУБД
+-- Так же необходимо допиливать механизм проверки на уровне приложения.
+
+
+-- попытка проапдейтить поля price значением не соответствующим параметром в DDL секции таблицы.
+UPDATE items SET `price` = '999999.003' WHERE `id` BETWEEN '1' AND '5';
+-- Все тоже самое. Все апдейтится. Ограничения неработают.
+
+-- попытка проапдейтить запись и изменить поле некорректными зхначениями DATA
+UPDATE items SET `income_date` = '2022-15-63' WHERE `id` NOT IN ('1', '3', '6', '22');
+-- То же самое, ограничения не сработали. В поле income_date записалась всякая чепуха. Нужно реализовывать проверку на уровне приложения.
+
+-- Попытка проапдейтить запись и установить значение поля updated отрицательным.
+UPDATE items SET `updated` = '23344422' WHERE `id`=12;
+-- Прямо беда какая то. Никакой вразумительной проверки.

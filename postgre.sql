@@ -43,3 +43,34 @@ INSERT INTO items ("sku", "barcode", "title", "full_title", "description", "img_
 INSERT INTO items ("sku", "barcode", "title", "full_title", "description", "img_uri", "price", "wh_count", "income_date") VALUES ('42569NGQ', '615705571001', 'AT&T 57006', 'Random description: gid2WHuhhP6dz67EjSgMyux1l', 'Smartphone AT&T 57006', 'at&t_5700.jpg', '78903.92', '10', '2014-4-26');
 INSERT INTO items ("sku", "barcode", "title", "full_title", "description", "img_uri", "price", "wh_count", "income_date") VALUES ('60335TLS', '657263817196', 'AT&T 57006', 'Random description: tBAOQPiObZPIkEyRbBcKWLn8B', 'Smartphone AT&T 57006', 'at&t_5700.jpg', '53713.98', '16', '2012-8-8');
 INSERT INTO items ("sku", "barcode", "title", "full_title", "description", "img_uri", "price", "wh_count", "income_date") VALUES ('26846HVC', '580461169324', 'Axia A1082', 'Random description: Z WYREr4wmUkfp1R6d64KgKSa', 'Smartphone Axia A1084', 'axia_a108.jpg', '41236.27', '10', '2011-2-1');
+
+
+
+
+/** тестовые запросы. Могут не работать!!! **/
+
+-- Попытка проапдейтить запись с id = 1 где значение поля `barcode` (поле для хранения штрихкода в 12-символьном формате EAN-13
+UPDATE items SET "barcode" = '00000000000000' WHERE "id" = '1';
+--[2018-09-04 14:33:53] [22001] ERROR: value too long for type character(12)
+
+
+-- попытка проапдейтить поля price значением не соответствующим параметром в DDL секции таблицы.
+UPDATE items SET "price" = '999922222.1001' WHERE "id" BETWEEN '1' AND '3';
+--[2018-09-04 14:36:53] [22003] ERROR: numeric field overflow
+--[2018-09-04 14:36:53] Подробности: A field with precision 8, scale 2 must round to an absolute value less than 10^6.
+
+-- попытка проапдейтить запись и изменить поле некорректными зхначениями DATA
+UPDATE items SET "income_date" = '2022-15-63' WHERE "id" NOT IN ('1', '3', '6', '22');
+--[2018-09-04 14:37:46] [22008] ERROR: date/time field value out of range: "2022-15-63"
+--[2018-09-04 14:37:46] Подсказка: Perhaps you need a different "datestyle" setting.
+--[2018-09-04 14:37:46] Позиция: 34
+-- ИМХО Самая "умная" система. Степень подсказываемости на очень хорошем уровне.
+
+
+
+-- Попытка проапдейтить запись и установить значение поля updated отрицательным. Формат TIMESTAMP не может быть отрицательным
+-- так же, сам формат не верный. Формат должен быть 'yyyy-mm-dd hh:mm:ss'
+UPDATE items SET "updated" = '23344422' WHERE "id"=12;
+--[2018-09-04 14:38:59] [22008] ERROR: date/time field value out of range: "23344422"
+--[2018-09-04 14:38:59] Подсказка: Perhaps you need a different "datestyle" setting.
+-- Все опять на высшем уровне!
